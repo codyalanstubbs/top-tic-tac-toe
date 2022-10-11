@@ -1,3 +1,32 @@
 * {
     font-family: 'Roboto', sans-serif;
 }
+
+.gameboard {
+    width: 180px;
+    height: 180px;
+}
+
+.row {
+    height: 60px;
+    display: flex;
+}
+
+.column {
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row:nth-of-type(2),
+.row:nth-of-type(3) {
+    border-top: 1px solid black;
+}
+
+.column:nth-of-type(2),
+.column:nth-of-type(3) {
+    border-left: 1px solid black;
+}
+
+

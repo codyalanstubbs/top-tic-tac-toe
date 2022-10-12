@@ -118,7 +118,7 @@ function buildPlayerInputs() {
 
 function buildGameboard() {
     const gameboardDiv = document.querySelector('.gameboard');
-
+    
     gameboard.forEach((row, rowIndex) => {
         let newRow = document.createElement('div');
         newRow.classList = "row";
@@ -173,8 +173,8 @@ function playerMove(space) {
 }
 
 function checkRows() {
+    let winnerMessage;
     gameboard.forEach((row) => {
-
         if (row[0] === '' && row[1] === '' && row[2] === '') {
             // Do nothing
             console.log("do nothing because row[all] === ''");
@@ -185,11 +185,22 @@ function checkRows() {
             console.log("someone wins");
             if (row[0] === playerOne.mark) {
                 playerOne.score += 1;
-                return `${playerOne.name} wins this round!`;
+                winnerMessage = `${playerOne.name} wins this round!`;
             } else if (row[0] === playerTwo.mark) {
                 playerTwo.score += 1;
-                return `${playerTwo.name} wins this round!`;
+                winnerMessage = `${playerTwo.name} wins this round!`;
             }
+            clearGameboard();
+            buildGameboard();
         }
     })
+    return winnerMessage;
+}
+
+function clearGameboard() {
+    const gameboardDiv = document.querySelector('.gameboard');
+    while (gameboardDiv.firstChild) {
+        gameboard[gameboardDiv.lastChild.id] = ['','',''];
+        gameboardDiv.removeChild(gameboardDiv.lastChild);
+    }
 }

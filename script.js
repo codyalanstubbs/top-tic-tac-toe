@@ -1,3 +1,7 @@
+const game = (() => {
+    const scoreToWin = 3;
+    return {scoreToWin}
+})();
 const gameboard = (() => {
     const firstRow = ['', '', ''];
     const secondRow = ['', '', ''];
@@ -15,6 +19,8 @@ const player = (name, mark, score) => {
 
 const playerOne = player('', '', 0);
 const playerTwo = player('', '', 0);
+
+const gamestarterDiv = document.querySelector(".gamestarter");
 const instruction = document.querySelector("#instruction");
 const message = document.querySelector(".message");
 
@@ -46,7 +52,6 @@ function listenSubmitPlayers() {
             playerTwo.name = nameP2;
             playerTwo.mark = markP2;
 
-            const gamestarterDiv = document.querySelector(".gamestarter");
             while (gamestarterDiv.firstChild) {
                 gamestarterDiv.removeChild(gamestarterDiv.lastChild);
             }
@@ -59,7 +64,6 @@ function listenSubmitPlayers() {
 }
 
 function buildPlayerInputs() {
-    const gamestarterDiv = document.querySelector(".gamestarter");
 
     let nameP1Label = document.createElement('label');
     nameP1Label.setAttribute("for", "nameP1");
@@ -190,8 +194,7 @@ function checkRows() {
                 playerTwo.score += 1;
                 winnerMessage = `${playerTwo.name} wins this round!`;
             }
-            clearGameboard();
-            buildGameboard();
+            winnerMessage = continueOrEndGame(winnerMessage);
         }
     })
     return winnerMessage;
@@ -216,8 +219,7 @@ function checkColumns() {
                 playerTwo.score += 1;
                 winnerMessage = `${playerTwo.name} wins that round!`;
             }
-            clearGameboard();
-            buildGameboard();
+            winnerMessage = continueOrEndGame(winnerMessage);
         }
     }
     return winnerMessage;
@@ -245,8 +247,7 @@ function checkDiagonals() {
             playerTwo.score += 1;
             winnerMessage = `${playerTwo.name} wins that round!`;
         }
-        clearGameboard();
-        buildGameboard();
+        winnerMessage = continueOrEndGame(winnerMessage);
     }
 
     // Check the backward slash diagonal for a win
@@ -268,8 +269,7 @@ function checkDiagonals() {
             playerTwo.score += 1;
             winnerMessage = `${playerTwo.name} wins that round!`;
         }
-        clearGameboard();
-        buildGameboard();
+        winnerMessage = continueOrEndGame(winnerMessage);
     }
 
     return winnerMessage;
@@ -308,5 +308,41 @@ function clearGameboard() {
     while (gameboardDiv.firstChild) {
         gameboard[gameboardDiv.lastChild.id] = ['', '', ''];
         gameboardDiv.removeChild(gameboardDiv.lastChild);
+    }
+}
+
+function continueOrEndGame(winnerMessage) {
+    if (playerOne.score === game.scoreToWin) {
+
+        gamestarterDiv.textContent = "Play Again?"
+        
+        let restartButton = document.createElement("button");
+        restartButton.type = "button"
+        restartButton.textContent = "AGAIN!"
+        restartButton.setAttribute("id", "restartGame");        
+
+        instruction.textContent = '';
+        instruction.appendChild(restartButton);
+
+        return `${playerOne.name} won the entire game!`
+
+    } else if (playerTwo.score === game.scoreToWin) {
+        
+        gamestarterDiv.textContent = "Play Again?"
+        
+        let restartButton = document.createElement("button");
+        restartButton.type = "button"
+        restartButton.textContent = "AGAIN!"
+        restartButton.setAttribute("id", "restartGame");
+
+        instruction.textContent = '';
+        instruction.appendChild(restartButton);
+
+        return `${playerTwo.name} won the entire game!`
+        
+    } else {
+        clearGameboard();
+        buildGameboard();
+        return winnerMessage;
     }
 }

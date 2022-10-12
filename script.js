@@ -13,7 +13,10 @@ const player = (name, mark, score) => {
     };
 }
 
+const playerOne = player('', '', 0);
+const playerTwo = player('', '', 0);
 buildPlayerInputs();
+listenSubmitPlayers()
 
 // Add event listeners to each space
 let message = document.querySelector(".message");
@@ -33,8 +36,44 @@ spaces.forEach((space) => {
         }
     })
 })
-const playerOne = player("P1", "O", 0);
-const playerTwo = player("P2", "X", 0);
+
+function listenSubmitPlayers() {
+    let submitPlayersBtn = document.querySelector("#submitPlayers");
+    submitPlayersBtn.addEventListener('click', (e) => {
+        let nameP1 = document.querySelector("#nameP1").value;
+        let markP1 = document.querySelector("#markP1").value;
+        let nameP2 = document.querySelector("#nameP2").value;
+        let markP2 = document.querySelector("#markP2").value;
+
+        if (
+            nameP1 === '' || nameP1 === null ||
+            markP1 === '' || markP1 === null ||
+            nameP2 === '' || nameP2 === null ||
+            markP2 === '' || markP2 === null 
+        ) {
+            document.querySelector("#instruction").textContent = "Please enter all inputs."
+        } else if (nameP1 === nameP2) {
+            document.querySelector("#instruction").textContent = "Players cannot have the same name."
+        } else if (markP1 === markP2) {
+            document.querySelector("#instruction").textContent = "Players cannot have the same mark."
+        } else {
+            document.querySelector("#instruction").textContent = "";
+
+            playerOne.name = nameP1;
+            playerOne.mark = markP1;
+            playerTwo.name = nameP2;
+            playerTwo.mark = markP2;
+
+            const gamestarterDiv = document.querySelector(".gamestarter");
+            while (gamestarterDiv.firstChild) {
+                gamestarterDiv.removeChild(gamestarterDiv.lastChild);
+            }
+            
+            buildGameboard();
+        }
+    })
+}
+
 function buildPlayerInputs() {
     const gamestarterDiv = document.querySelector(".gamestarter");
 
@@ -45,8 +84,19 @@ function buildPlayerInputs() {
     let nameP1Input = document.createElement('input');
     nameP1Input.setAttribute("name", "nameP1");
     nameP1Input.setAttribute("id", "nameP1");
+    nameP1Input.required = true;
     nameP1Input.setAttribute("placeholder", "Enter P1's name here");
 
+    let markP1Label = document.createElement('label');
+    markP1Label.setAttribute("for", "markP1");
+    markP1Label.textContent = "Player 1 Mark: ";
+
+    let markP1Input = document.createElement('input');
+    markP1Input.setAttribute("mark", "markP1");
+    markP1Input.setAttribute("id", "markP1");
+    markP1Input.setAttribute("maxlength", "1");
+    markP1Input.required = true;
+    markP1Input.setAttribute("placeholder", "Enter one letter or number");
 
     let nameP2Label = document.createElement('label');
     nameP2Label.setAttribute("for", "nameP2");
@@ -55,16 +105,30 @@ function buildPlayerInputs() {
     let nameP2Input = document.createElement('input');
     nameP2Input.setAttribute("name", "nameP2");
     nameP2Input.setAttribute("id", "nameP2");
+    nameP2Input.required = true;
     nameP2Input.setAttribute("placeholder", "Enter P2's name here");
 
-    let submitBtn = document.createElement('button');
-    submitBtn.type = "button";
-    submitBtn.setAttribute("id", "submitPlayers");
-    submitBtn.textContent = "START GAME";
+    let markP2Label = document.createElement('label');
+    markP2Label.setAttribute("for", "markP2");
+    markP2Label.textContent = "Player 2 Mark: ";
+
+    let markP2Input = document.createElement('input');
+    markP2Input.setAttribute("mark", "markP2");
+    markP2Input.setAttribute("id", "markP2");
+    markP2Input.setAttribute("maxlength", "1");
+    markP2Input.required = true;
+    markP2Input.setAttribute("placeholder", "Enter one letter or number");
+
+    let submitPlayersBtn = document.createElement('button');
+    submitPlayersBtn.type = "button";
+    submitPlayersBtn.setAttribute("id", "submitPlayers");
+    submitPlayersBtn.textContent = "START GAME";
 
     gamestarterDiv.appendChild(nameP1Label).appendChild(nameP1Input);
+    gamestarterDiv.appendChild(markP1Label).appendChild(markP1Input);
     gamestarterDiv.appendChild(nameP2Label).appendChild(nameP2Input);
-    gamestarterDiv.appendChild(submitBtn);
+    gamestarterDiv.appendChild(markP2Label).appendChild(markP2Input);
+    gamestarterDiv.appendChild(submitPlayersBtn);
 
 }
 

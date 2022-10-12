@@ -148,6 +148,7 @@ function playerMove(space) {
     let row = space.parentElement.id;
     let column = space.id;
     let currentPlayer = instruction.classList.value;
+    
     // Check if the space already has a mark...
     if (gameboard[row][column] === '') {
         // ...if it does not then place the current player's mark there...

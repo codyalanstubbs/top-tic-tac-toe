@@ -148,7 +148,7 @@ function playerMove(space) {
     let row = space.parentElement.id;
     let column = space.id;
     let currentPlayer = instruction.classList.value;
-    
+
     // Check if the space already has a mark...
     if (gameboard[row][column] === '') {
         // ...if it does not then place the current player's mark there...
@@ -169,7 +169,7 @@ function playerMove(space) {
 
         }
         space.textContent = gameboard[row][column];
-        message.textContent = checkRows() || checkColumns();
+        message.textContent = checkRows() || checkColumns() || checkTie();
     } else {
         message.textContent = "Hey! That space is already taken.";
     }
@@ -211,16 +211,44 @@ function checkColumns() {
         } else {
             if (gameboard[0][i] === playerOne.mark) {
                 playerOne.score += 1;
-                winnerMessage = `${playerOne.name} wins this round!`;
+                winnerMessage = `${playerOne.name} wins that round!`;
             } else if (gameboard[0][i] === playerTwo.mark) {
                 playerTwo.score += 1;
-                winnerMessage = `${playerTwo.name} wins this round!`;
+                winnerMessage = `${playerTwo.name} wins that round!`;
             }
             clearGameboard();
             buildGameboard();
         }
     }
     return winnerMessage;
+}
+
+function checkTie() {
+    let fullOrNotFull = checkAllSpacesFull();
+    if (fullOrNotFull === "Full") {
+        clearGameboard();
+        buildGameboard();
+        return "That round was a tie! Try again."
+    }
+}
+
+function checkAllSpacesFull() {
+    let fullOrNotFull;
+    for (let rowNum = 0; rowNum < gameboard.length; rowNum++) {
+        for (let colNum = 0; colNum < gameboard[rowNum].length; colNum++) {
+            if (gameboard[rowNum][colNum] === '') {
+                fullOrNotFull = "Not Full";
+            }
+        }
+        if (fullOrNotFull === "Not Full") {
+            break;
+        }
+    }
+    if (fullOrNotFull === "Not Full") {
+        return "Not Full";
+    } else {
+        return "Full";
+    }
 }
 
 function clearGameboard() {

@@ -1,7 +1,10 @@
 const game = (() => {
     const scoreToWin = 3;
-    return {scoreToWin}
+    return {
+        scoreToWin
+    }
 })();
+
 const gameboard = (() => {
     const firstRow = ['', '', ''];
     const secondRow = ['', '', ''];
@@ -329,11 +332,12 @@ function continueOrEndGame(winnerMessage) {
     if (playerOne.score === game.scoreToWin) {
 
         gamestarterDiv.textContent = "Play Again?"
-        
+
         let restartButton = document.createElement("button");
         restartButton.type = "button"
         restartButton.textContent = "AGAIN!"
-        restartButton.setAttribute("id", "restartGame");        
+        restartButton.setAttribute("id", "restartGame");
+        restartButton.addEventListener('click', playAgain);
 
         instruction.textContent = '';
         instruction.appendChild(restartButton);
@@ -341,13 +345,14 @@ function continueOrEndGame(winnerMessage) {
         return `${playerOne.name} won the entire game!`
 
     } else if (playerTwo.score === game.scoreToWin) {
-        
+
         gamestarterDiv.textContent = "Play Again?"
-        
+
         let restartButton = document.createElement("button");
         restartButton.type = "button"
         restartButton.textContent = "AGAIN!"
         restartButton.setAttribute("id", "restartGame");
+        restartButton.addEventListener('click', playAgain);
 
         instruction.textContent = '';
         instruction.appendChild(restartButton);
@@ -359,4 +364,30 @@ function continueOrEndGame(winnerMessage) {
         buildGameboard();
         return winnerMessage;
     }
+}
+
+function playAgain() {
+
+    gameboard.forEach((row) => {
+        row.forEach((column) => {
+            column = '';
+        })
+    })
+
+    document.querySelector("#restartGame").remove();
+    gamestarterDiv.textContent = '';
+    message.textContent = '';
+
+    let currentPlayer = instruction.classList.value;
+    if (currentPlayer === playerOne.mark) {
+        instruction.textContent = `${playerTwo.name} goes first!`;
+    } else if (currentPlayer === playerTwo.mark) {
+        instruction.textContent = `${playerOne.name} goes first!`;
+    }
+
+    playerOne.score = 0;
+    playerTwo.score = 0; 
+    
+    clearGameboard();
+    buildGameboard();
 }

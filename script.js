@@ -15,27 +15,10 @@ const player = (name, mark, score) => {
 
 const playerOne = player('', '', 0);
 const playerTwo = player('', '', 0);
+const instruction = document.querySelector("#instruction");
+const message = document.querySelector(".message");
 buildPlayerInputs();
 listenSubmitPlayers()
-
-// Add event listeners to each space
-let message = document.querySelector(".message");
-let spaces = document.querySelectorAll(".column");
-spaces.forEach((space) => {
-    space.addEventListener('click', (e) => {
-        message.textContent = ""; // Reset message on each click
-
-        let row = space.parentElement.id;
-        let column = space.id;
-    
-        if (gameboard[row][column] === '') {
-            gameboard[row][column] = 'X';
-            space.textContent = gameboard[row][column];
-        } else {
-            message.textContent = "Hey! That space is already taken.";
-        }
-    })
-})
 
 function listenSubmitPlayers() {
     let submitPlayersBtn = document.querySelector("#submitPlayers");
@@ -49,16 +32,14 @@ function listenSubmitPlayers() {
             nameP1 === '' || nameP1 === null ||
             markP1 === '' || markP1 === null ||
             nameP2 === '' || nameP2 === null ||
-            markP2 === '' || markP2 === null 
+            markP2 === '' || markP2 === null
         ) {
-            document.querySelector("#instruction").textContent = "Please enter all inputs."
+            instruction.textContent = "Please enter all inputs."
         } else if (nameP1 === nameP2) {
-            document.querySelector("#instruction").textContent = "Players cannot have the same name."
+            instruction.textContent = "Players cannot have the same name."
         } else if (markP1 === markP2) {
-            document.querySelector("#instruction").textContent = "Players cannot have the same mark."
+            instruction.textContent = "Players cannot have the same mark."
         } else {
-            document.querySelector("#instruction").textContent = "";
-
             playerOne.name = nameP1;
             playerOne.mark = markP1;
             playerTwo.name = nameP2;
@@ -68,8 +49,10 @@ function listenSubmitPlayers() {
             while (gamestarterDiv.firstChild) {
                 gamestarterDiv.removeChild(gamestarterDiv.lastChild);
             }
-            
+
             buildGameboard();
+            instruction.textContent = `${playerOne.name} goes first!`;
+            instruction.classList = playerOne.mark;
         }
     })
 }
@@ -146,10 +129,44 @@ function buildGameboard() {
             newColumn.setAttribute("id", colIndex);
             newColumn.textContent = column;
 
+            newColumn.addEventListener('click', (e) => {
+                playerMove(newColumn);
+            })
+
             newRow.appendChild(newColumn);
         })
 
         gameboardDiv.appendChild(newRow);
     })
 
+}
+
+function playerMove(space) {
+    message.textContent = ""; // Reset message on each click
+
+    let row = space.parentElement.id;
+    let column = space.id;
+
+    if (gameboard[row][column] === '') {
+
+        if (instruction.classList.value === playerOne.mark) {
+
+            gameboard[row][column] = playerOne.mark;
+
+            instruction.classList = playerTwo.mark;
+            instruction.textContent = `${playerTwo.name} goes next!`;
+
+        } else if (instruction.classList.value === playerTwo.mark) {
+
+            gameboard[row][column] = playerTwo.mark;
+
+            instruction.classList = playerOne.mark;
+            instruction.textContent = `${playerOne.name} goes next!`;
+
+        }
+        space.textContent = gameboard[row][column];
+
+    } else {
+        message.textContent = "Hey! That space is already taken.";
+    }
 }

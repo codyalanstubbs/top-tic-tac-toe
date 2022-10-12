@@ -1,12 +1,49 @@
 * {
     font-family: 'Roboto', sans-serif;
+    background-color: black;
+    color: goldenrod;
 }
+
 html.p2:hover {
     cursor: pointer;
 }
+
 html.p1:hover {
     cursor: crosshair;
 }
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.gamestarter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+button {
+    background-color: goldenrod;
+    color: #000;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: #000;
+    color: goldenrod;
+}
+
+#submitPlayers {
+    align-self: center;
+}
+
 
 .gameboard {
     width: 180px;
@@ -27,12 +64,10 @@ html.p1:hover {
 
 .row:nth-of-type(2),
 .row:nth-of-type(3) {
-    border-top: 1px solid black;
+    border-top: 1px solid goldenrod;
 }
 
 .column:nth-of-type(2),
 .column:nth-of-type(3) {
-    border-left: 1px solid black;
+    border-left: 1px solid goldenrod;
 }
-
-

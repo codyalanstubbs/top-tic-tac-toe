@@ -147,17 +147,19 @@ function playerMove(space) {
 
     let row = space.parentElement.id;
     let column = space.id;
-
+    let currentPlayer = instruction.classList.value;
+    // Check if the space already has a mark...
     if (gameboard[row][column] === '') {
-
-        if (instruction.classList.value === playerOne.mark) {
+        // ...if it does not then place the current player's mark there...
+        // ...but first check which player's turn it is
+        if (currentPlayer === playerOne.mark) {
 
             gameboard[row][column] = playerOne.mark;
 
             instruction.classList = playerTwo.mark;
             instruction.textContent = `${playerTwo.name} goes next!`;
 
-        } else if (instruction.classList.value === playerTwo.mark) {
+        } else if (currentPlayer === playerTwo.mark) {
 
             gameboard[row][column] = playerTwo.mark;
 

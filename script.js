@@ -17,6 +17,7 @@ const playerOne = player('', '', 0);
 const playerTwo = player('', '', 0);
 const instruction = document.querySelector("#instruction");
 const message = document.querySelector(".message");
+
 buildPlayerInputs();
 listenSubmitPlayers()
 

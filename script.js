@@ -34,6 +34,7 @@ function listenSubmitPlayers() {
         let markP1 = document.querySelector("#markP1").value;
         let nameP2 = document.querySelector("#nameP2").value;
         let markP2 = document.querySelector("#markP2").value;
+        game.scoreToWin = Number(document.querySelector("#scoreToWin").value);
 
         if (
             nameP1 === '' || nameP1 === null ||
@@ -80,7 +81,7 @@ function buildPlayerInputs() {
     markP1Label.textContent = "Player 1 Mark: ";
 
     let markP1Input = document.createElement('input');
-    markP1Input.setAttribute("mark", "markP1");
+    markP1Input.setAttribute("name", "markP1");
     markP1Input.setAttribute("id", "markP1");
     markP1Input.setAttribute("maxlength", "1");
     markP1Input.required = true;
@@ -101,11 +102,23 @@ function buildPlayerInputs() {
     markP2Label.textContent = "Player 2 Mark: ";
 
     let markP2Input = document.createElement('input');
-    markP2Input.setAttribute("mark", "markP2");
+    markP2Input.setAttribute("name", "markP2");
     markP2Input.setAttribute("id", "markP2");
     markP2Input.setAttribute("maxlength", "1");
     markP2Input.required = true;
     markP2Input.setAttribute("placeholder", "Enter one letter or number");
+
+    let scoreToWinLabel = document.createElement('label');
+    scoreToWinLabel.setAttribute("for", "scoreToWin");
+    scoreToWinLabel.textContent = "Score to win: ";
+
+    let scoreToWinInput = document.createElement('input');
+    scoreToWinInput.setAttribute("name", "scoreToWin");
+    scoreToWinInput.setAttribute("id", "scoreToWin");
+    scoreToWinInput.setAttribute("type", "number");
+    scoreToWinInput.setAttribute("min", "1");
+    scoreToWinInput.setAttribute("step", "1");
+    scoreToWinInput.setAttribute("value", "3");
 
     let submitPlayersBtn = document.createElement('button');
     submitPlayersBtn.type = "button";
@@ -116,6 +129,7 @@ function buildPlayerInputs() {
     gamestarterDiv.appendChild(markP1Label).appendChild(markP1Input);
     gamestarterDiv.appendChild(nameP2Label).appendChild(nameP2Input);
     gamestarterDiv.appendChild(markP2Label).appendChild(markP2Input);
+    gamestarterDiv.appendChild(scoreToWinLabel).appendChild(scoreToWinInput);
     gamestarterDiv.appendChild(submitPlayersBtn);
 
 }
@@ -339,7 +353,7 @@ function continueOrEndGame(winnerMessage) {
         instruction.appendChild(restartButton);
 
         return `${playerTwo.name} won the entire game!`
-        
+
     } else {
         clearGameboard();
         buildGameboard();

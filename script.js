@@ -118,7 +118,7 @@ function buildPlayerInputs() {
 
 function buildGameboard() {
     const gameboardDiv = document.querySelector('.gameboard');
-    
+
     gameboard.forEach((row, rowIndex) => {
         let newRow = document.createElement('div');
         newRow.classList = "row";
@@ -169,7 +169,7 @@ function playerMove(space) {
 
         }
         space.textContent = gameboard[row][column];
-        message.textContent = checkRows() || checkColumns() || checkTie();
+        message.textContent = checkRows() || checkColumns() || checkDiagonals() || checkTie();
     } else {
         message.textContent = "Hey! That space is already taken.";
     }
@@ -203,8 +203,8 @@ function checkColumns() {
         if (gameboard[0][i] === '' && gameboard[1][i] === '' && gameboard[2][i] === '') {
             // Do nothing
         } else if (
-            gameboard[0][i] !== gameboard[1][i] || 
-            gameboard[0][i] !== gameboard[2][i] || 
+            gameboard[0][i] !== gameboard[1][i] ||
+            gameboard[0][i] !== gameboard[2][i] ||
             gameboard[1][i] !== gameboard[2][i]
         ) {
             // Do nothing
@@ -220,6 +220,58 @@ function checkColumns() {
             buildGameboard();
         }
     }
+    return winnerMessage;
+}
+
+function checkDiagonals() {
+    let winnerMessage;
+
+    // Check the forward slash diagonal for a win
+    if (gameboard[0][0] === '' || gameboard[1][1] === '' || gameboard[2][2] === '') {
+        // Do nothing
+    } else if (gameboard[0][0] !== gameboard[1][1] ||
+        gameboard[0][0] !== gameboard[1][1] ||
+        gameboard[1][1] !== gameboard[2][2]
+    ) {
+        // Do nothing
+    } else if (gameboard[0][0] === gameboard[1][1] &&
+        gameboard[0][0] === gameboard[1][1] &&
+        gameboard[1][1] === gameboard[2][2]
+    ) {
+        if (gameboard[1][1] === playerOne.mark) {
+            playerOne.score += 1;
+            winnerMessage = `${playerOne.name} wins that round!`;
+        } else if (gameboard[1][1] === playerTwo.mark) {
+            playerTwo.score += 1;
+            winnerMessage = `${playerTwo.name} wins that round!`;
+        }
+        clearGameboard();
+        buildGameboard();
+    }
+
+    // Check the backward slash diagonal for a win
+    if (gameboard[2][0] === '' || gameboard[1][1] === '' || gameboard[0][2] === '') {
+        // Do nothing
+    } else if (gameboard[2][0] !== gameboard[1][1] ||
+        gameboard[2][0] !== gameboard[1][1] ||
+        gameboard[1][1] !== gameboard[0][2]
+    ) {
+        // Do nothing
+    } else if (gameboard[2][0] === gameboard[1][1] &&
+        gameboard[2][0] === gameboard[1][1] &&
+        gameboard[1][1] === gameboard[0][2]
+    ) {
+        if (gameboard[1][1] === playerOne.mark) {
+            playerOne.score += 1;
+            winnerMessage = `${playerOne.name} wins that round!`;
+        } else if (gameboard[1][1] === playerTwo.mark) {
+            playerTwo.score += 1;
+            winnerMessage = `${playerTwo.name} wins that round!`;
+        }
+        clearGameboard();
+        buildGameboard();
+    }
+
     return winnerMessage;
 }
 
@@ -254,7 +306,7 @@ function checkAllSpacesFull() {
 function clearGameboard() {
     const gameboardDiv = document.querySelector('.gameboard');
     while (gameboardDiv.firstChild) {
-        gameboard[gameboardDiv.lastChild.id] = ['','',''];
+        gameboard[gameboardDiv.lastChild.id] = ['', '', ''];
         gameboardDiv.removeChild(gameboardDiv.lastChild);
     }
 }

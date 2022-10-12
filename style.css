@@ -1,6 +1,12 @@
 * {
     font-family: 'Roboto', sans-serif;
 }
+html.p2:hover {
+    cursor: pointer;
+}
+html.p1:hover {
+    cursor: crosshair;
+}
 
 .gameboard {
     width: 180px;

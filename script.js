@@ -166,7 +166,7 @@ function playerMove(space) {
 
         }
         space.textContent = gameboard[row][column];
-        message.textContent = checkRows();
+        message.textContent = checkRows() || checkColumns();
     } else {
         message.textContent = "Hey! That space is already taken.";
     }
@@ -177,12 +177,9 @@ function checkRows() {
     gameboard.forEach((row) => {
         if (row[0] === '' && row[1] === '' && row[2] === '') {
             // Do nothing
-            console.log("do nothing because row[all] === ''");
         } else if (row[0] !== row[1] || row[0] !== row[2] || row[1] !== row[2]) {
             // Do nothing
-            console.log("do nothing because row[i] !== row[i]");
         } else {
-            console.log("someone wins");
             if (row[0] === playerOne.mark) {
                 playerOne.score += 1;
                 winnerMessage = `${playerOne.name} wins this round!`;
@@ -194,6 +191,32 @@ function checkRows() {
             buildGameboard();
         }
     })
+    return winnerMessage;
+}
+
+function checkColumns() {
+    let winnerMessage;
+    for (let i = 0; i < 3; i++) {
+        if (gameboard[0][i] === '' && gameboard[1][i] === '' && gameboard[2][i] === '') {
+            // Do nothing
+        } else if (
+            gameboard[0][i] !== gameboard[1][i] || 
+            gameboard[0][i] !== gameboard[2][i] || 
+            gameboard[1][i] !== gameboard[2][i]
+        ) {
+            // Do nothing
+        } else {
+            if (gameboard[0][i] === playerOne.mark) {
+                playerOne.score += 1;
+                winnerMessage = `${playerOne.name} wins this round!`;
+            } else if (gameboard[0][i] === playerTwo.mark) {
+                playerTwo.score += 1;
+                winnerMessage = `${playerTwo.name} wins this round!`;
+            }
+            clearGameboard();
+            buildGameboard();
+        }
+    }
     return winnerMessage;
 }
 

@@ -5,6 +5,7 @@
 }
 
 html.p2:hover {
+    background-color: black;
     cursor: pointer;
 }
 

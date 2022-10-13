@@ -1,393 +1,390 @@
 const game = (() => {
-    const scoreToWin = 3;
-    return {
-        scoreToWin
+
+    const player = (name, mark, score) => {
+        return {
+            name,
+            mark,
+            score
+        };
     }
-})();
 
-const gameboard = (() => {
-    const firstRow = ['', '', ''];
-    const secondRow = ['', '', ''];
-    const thirdRow = ['', '', ''];
-    return [firstRow, secondRow, thirdRow];
-})();
+    const gameboard = (() => {
+        const firstRow = ['', '', ''];
+        const secondRow = ['', '', ''];
+        const thirdRow = ['', '', ''];
+        return [firstRow, secondRow, thirdRow];
+    })();
 
-const player = (name, mark, score) => {
-    return {
-        name,
-        mark,
-        score
-    };
-}
+    const gamestarterDiv = document.querySelector(".gamestarter");
+    const instruction = document.querySelector("#instruction");
+    const message = document.querySelector(".message");
+    let scoreToWin = 3;
+    const playerOne = player('', '', 0);;
+    const playerTwo = player('', '', 0);
 
-const playerOne = player('', '', 0);
-const playerTwo = player('', '', 0);
 
-const gamestarterDiv = document.querySelector(".gamestarter");
-const instruction = document.querySelector("#instruction");
-const message = document.querySelector(".message");
+    function listenSubmitPlayers() {
+        let submitPlayersBtn = document.querySelector("#submitPlayers");
+        submitPlayersBtn.addEventListener('click', (e) => {
+            let nameP1 = document.querySelector("#nameP1").value;
+            let markP1 = document.querySelector("#markP1").value;
+            let nameP2 = document.querySelector("#nameP2").value;
+            let markP2 = document.querySelector("#markP2").value;
+            scoreToWin = Number(document.querySelector("#scoreToWin").value);
 
-buildPlayerInputs();
-listenSubmitPlayers()
+            if (
+                nameP1 === '' || nameP1 === null ||
+                markP1 === '' || markP1 === null ||
+                nameP2 === '' || nameP2 === null ||
+                markP2 === '' || markP2 === null
+            ) {
+                instruction.textContent = "Please enter all inputs."
+            } else if (nameP1 === nameP2) {
+                instruction.textContent = "Players cannot have the same name."
+            } else if (markP1 === markP2) {
+                instruction.textContent = "Players cannot have the same mark."
+            } else {
+                playerOne.name = nameP1;
+                playerOne.mark = markP1;
+                playerTwo.name = nameP2;
+                playerTwo.mark = markP2;
 
-function listenSubmitPlayers() {
-    let submitPlayersBtn = document.querySelector("#submitPlayers");
-    submitPlayersBtn.addEventListener('click', (e) => {
-        let nameP1 = document.querySelector("#nameP1").value;
-        let markP1 = document.querySelector("#markP1").value;
-        let nameP2 = document.querySelector("#nameP2").value;
-        let markP2 = document.querySelector("#markP2").value;
-        game.scoreToWin = Number(document.querySelector("#scoreToWin").value);
+                while (gamestarterDiv.firstChild) {
+                    gamestarterDiv.removeChild(gamestarterDiv.lastChild);
+                }
 
-        if (
-            nameP1 === '' || nameP1 === null ||
-            markP1 === '' || markP1 === null ||
-            nameP2 === '' || nameP2 === null ||
-            markP2 === '' || markP2 === null
-        ) {
-            instruction.textContent = "Please enter all inputs."
-        } else if (nameP1 === nameP2) {
-            instruction.textContent = "Players cannot have the same name."
-        } else if (markP1 === markP2) {
-            instruction.textContent = "Players cannot have the same mark."
-        } else {
-            playerOne.name = nameP1;
-            playerOne.mark = markP1;
-            playerTwo.name = nameP2;
-            playerTwo.mark = markP2;
-
-            while (gamestarterDiv.firstChild) {
-                gamestarterDiv.removeChild(gamestarterDiv.lastChild);
+                buildGameboard();
+                instruction.textContent = `${playerOne.name} goes first!`;
+                instruction.classList = playerOne.mark;
             }
+        })
+    }
 
-            buildGameboard();
-            instruction.textContent = `${playerOne.name} goes first!`;
-            instruction.classList = playerOne.mark;
-        }
-    })
-}
+    function buildPlayerInputs() {
 
-function buildPlayerInputs() {
+        let nameP1Label = document.createElement('label');
+        nameP1Label.setAttribute("for", "nameP1");
+        nameP1Label.textContent = "Player 1 Name: ";
 
-    let nameP1Label = document.createElement('label');
-    nameP1Label.setAttribute("for", "nameP1");
-    nameP1Label.textContent = "Player 1 Name: ";
+        let nameP1Input = document.createElement('input');
+        nameP1Input.setAttribute("name", "nameP1");
+        nameP1Input.setAttribute("id", "nameP1");
+        nameP1Input.required = true;
+        nameP1Input.setAttribute("placeholder", "Enter P1's name here");
 
-    let nameP1Input = document.createElement('input');
-    nameP1Input.setAttribute("name", "nameP1");
-    nameP1Input.setAttribute("id", "nameP1");
-    nameP1Input.required = true;
-    nameP1Input.setAttribute("placeholder", "Enter P1's name here");
+        let markP1Label = document.createElement('label');
+        markP1Label.setAttribute("for", "markP1");
+        markP1Label.textContent = "Player 1 Mark: ";
 
-    let markP1Label = document.createElement('label');
-    markP1Label.setAttribute("for", "markP1");
-    markP1Label.textContent = "Player 1 Mark: ";
+        let markP1Input = document.createElement('input');
+        markP1Input.setAttribute("name", "markP1");
+        markP1Input.setAttribute("id", "markP1");
+        markP1Input.setAttribute("maxlength", "1");
+        markP1Input.required = true;
+        markP1Input.setAttribute("placeholder", "Enter one letter or number");
 
-    let markP1Input = document.createElement('input');
-    markP1Input.setAttribute("name", "markP1");
-    markP1Input.setAttribute("id", "markP1");
-    markP1Input.setAttribute("maxlength", "1");
-    markP1Input.required = true;
-    markP1Input.setAttribute("placeholder", "Enter one letter or number");
+        let nameP2Label = document.createElement('label');
+        nameP2Label.setAttribute("for", "nameP2");
+        nameP2Label.textContent = "Player 2 Name: ";
 
-    let nameP2Label = document.createElement('label');
-    nameP2Label.setAttribute("for", "nameP2");
-    nameP2Label.textContent = "Player 2 Name: ";
+        let nameP2Input = document.createElement('input');
+        nameP2Input.setAttribute("name", "nameP2");
+        nameP2Input.setAttribute("id", "nameP2");
+        nameP2Input.required = true;
+        nameP2Input.setAttribute("placeholder", "Enter P2's name here");
 
-    let nameP2Input = document.createElement('input');
-    nameP2Input.setAttribute("name", "nameP2");
-    nameP2Input.setAttribute("id", "nameP2");
-    nameP2Input.required = true;
-    nameP2Input.setAttribute("placeholder", "Enter P2's name here");
+        let markP2Label = document.createElement('label');
+        markP2Label.setAttribute("for", "markP2");
+        markP2Label.textContent = "Player 2 Mark: ";
 
-    let markP2Label = document.createElement('label');
-    markP2Label.setAttribute("for", "markP2");
-    markP2Label.textContent = "Player 2 Mark: ";
+        let markP2Input = document.createElement('input');
+        markP2Input.setAttribute("name", "markP2");
+        markP2Input.setAttribute("id", "markP2");
+        markP2Input.setAttribute("maxlength", "1");
+        markP2Input.required = true;
+        markP2Input.setAttribute("placeholder", "Enter one letter or number");
 
-    let markP2Input = document.createElement('input');
-    markP2Input.setAttribute("name", "markP2");
-    markP2Input.setAttribute("id", "markP2");
-    markP2Input.setAttribute("maxlength", "1");
-    markP2Input.required = true;
-    markP2Input.setAttribute("placeholder", "Enter one letter or number");
+        let scoreToWinLabel = document.createElement('label');
+        scoreToWinLabel.setAttribute("for", "scoreToWin");
+        scoreToWinLabel.textContent = "Score to win: ";
 
-    let scoreToWinLabel = document.createElement('label');
-    scoreToWinLabel.setAttribute("for", "scoreToWin");
-    scoreToWinLabel.textContent = "Score to win: ";
+        let scoreToWinInput = document.createElement('input');
+        scoreToWinInput.setAttribute("name", "scoreToWin");
+        scoreToWinInput.setAttribute("id", "scoreToWin");
+        scoreToWinInput.setAttribute("type", "number");
+        scoreToWinInput.setAttribute("min", "1");
+        scoreToWinInput.setAttribute("step", "1");
+        scoreToWinInput.setAttribute("value", "3");
 
-    let scoreToWinInput = document.createElement('input');
-    scoreToWinInput.setAttribute("name", "scoreToWin");
-    scoreToWinInput.setAttribute("id", "scoreToWin");
-    scoreToWinInput.setAttribute("type", "number");
-    scoreToWinInput.setAttribute("min", "1");
-    scoreToWinInput.setAttribute("step", "1");
-    scoreToWinInput.setAttribute("value", "3");
+        let submitPlayersBtn = document.createElement('button');
+        submitPlayersBtn.type = "button";
+        submitPlayersBtn.setAttribute("id", "submitPlayers");
+        submitPlayersBtn.textContent = "START GAME";
 
-    let submitPlayersBtn = document.createElement('button');
-    submitPlayersBtn.type = "button";
-    submitPlayersBtn.setAttribute("id", "submitPlayers");
-    submitPlayersBtn.textContent = "START GAME";
+        gamestarterDiv.appendChild(nameP1Label).appendChild(nameP1Input);
+        gamestarterDiv.appendChild(markP1Label).appendChild(markP1Input);
+        gamestarterDiv.appendChild(nameP2Label).appendChild(nameP2Input);
+        gamestarterDiv.appendChild(markP2Label).appendChild(markP2Input);
+        gamestarterDiv.appendChild(scoreToWinLabel).appendChild(scoreToWinInput);
+        gamestarterDiv.appendChild(submitPlayersBtn);
 
-    gamestarterDiv.appendChild(nameP1Label).appendChild(nameP1Input);
-    gamestarterDiv.appendChild(markP1Label).appendChild(markP1Input);
-    gamestarterDiv.appendChild(nameP2Label).appendChild(nameP2Input);
-    gamestarterDiv.appendChild(markP2Label).appendChild(markP2Input);
-    gamestarterDiv.appendChild(scoreToWinLabel).appendChild(scoreToWinInput);
-    gamestarterDiv.appendChild(submitPlayersBtn);
+    }
 
-}
+    function buildGameboard() {
+        const gameboardDiv = document.querySelector('.gameboard');
 
-function buildGameboard() {
-    const gameboardDiv = document.querySelector('.gameboard');
+        gameboard.forEach((row, rowIndex) => {
+            let newRow = document.createElement('div');
+            newRow.classList = "row";
+            newRow.setAttribute("id", rowIndex);
 
-    gameboard.forEach((row, rowIndex) => {
-        let newRow = document.createElement('div');
-        newRow.classList = "row";
-        newRow.setAttribute("id", rowIndex);
+            row.forEach((column, colIndex) => {
+                let newColumn = document.createElement('div');
+                newColumn.classList = "column";
+                newColumn.setAttribute("id", colIndex);
+                newColumn.textContent = column;
 
-        row.forEach((column, colIndex) => {
-            let newColumn = document.createElement('div');
-            newColumn.classList = "column";
-            newColumn.setAttribute("id", colIndex);
-            newColumn.textContent = column;
+                newColumn.addEventListener('click', (e) => {
+                    playerMove(newColumn);
+                })
 
-            newColumn.addEventListener('click', (e) => {
-                playerMove(newColumn);
+                newRow.appendChild(newColumn);
             })
 
-            newRow.appendChild(newColumn);
+            gameboardDiv.appendChild(newRow);
         })
 
-        gameboardDiv.appendChild(newRow);
-    })
-
-}
-
-function playerMove(space) {
-    message.textContent = ""; // Reset message on each click
-
-    let row = space.parentElement.id;
-    let column = space.id;
-    let currentPlayer = instruction.classList.value;
-
-    // Check if the space already has a mark...
-    if (gameboard[row][column] === '') {
-        // ...if it does not then place the current player's mark there...
-        // ...but first check which player's turn it is
-        if (currentPlayer === playerOne.mark) {
-
-            gameboard[row][column] = playerOne.mark;
-
-            instruction.classList = playerTwo.mark;
-            instruction.textContent = `${playerTwo.name} goes next!`;
-
-        } else if (currentPlayer === playerTwo.mark) {
-
-            gameboard[row][column] = playerTwo.mark;
-
-            instruction.classList = playerOne.mark;
-            instruction.textContent = `${playerOne.name} goes next!`;
-
-        }
-        space.textContent = gameboard[row][column];
-        message.textContent = checkRows() || checkColumns() || checkDiagonals() || checkTie();
-    } else {
-        message.textContent = "Hey! That space is already taken.";
     }
-}
 
-function checkRows() {
-    let winnerMessage;
-    gameboard.forEach((row) => {
-        if (row[0] === '' && row[1] === '' && row[2] === '') {
-            // Do nothing
-        } else if (row[0] !== row[1] || row[0] !== row[2] || row[1] !== row[2]) {
-            // Do nothing
-        } else {
-            if (row[0] === playerOne.mark) {
-                playerOne.score += 1;
-                winnerMessage = `${playerOne.name} wins this round!`;
-            } else if (row[0] === playerTwo.mark) {
-                playerTwo.score += 1;
-                winnerMessage = `${playerTwo.name} wins this round!`;
+    function playerMove(space) {
+        message.textContent = ""; // Reset message on each click
+
+        let row = space.parentElement.id;
+        let column = space.id;
+        let currentPlayer = instruction.classList.value;
+
+        // Check if the space already has a mark...
+        if (gameboard[row][column] === '') {
+            // ...if it does not then place the current player's mark there...
+            // ...but first check which player's turn it is
+            if (currentPlayer === playerOne.mark) {
+
+                gameboard[row][column] = playerOne.mark;
+
+                instruction.classList = playerTwo.mark;
+                instruction.textContent = `${playerTwo.name} goes next!`;
+
+            } else if (currentPlayer === playerTwo.mark) {
+
+                gameboard[row][column] = playerTwo.mark;
+
+                instruction.classList = playerOne.mark;
+                instruction.textContent = `${playerOne.name} goes next!`;
+
             }
-            winnerMessage = continueOrEndGame(winnerMessage);
+            space.textContent = gameboard[row][column];
+            message.textContent = checkRows() || checkColumns() || checkDiagonals() || checkTie();
+        } else {
+            message.textContent = "Hey! That space is already taken.";
         }
-    })
-    return winnerMessage;
-}
+    }
 
-function checkColumns() {
-    let winnerMessage;
-    for (let i = 0; i < 3; i++) {
-        if (gameboard[0][i] === '' && gameboard[1][i] === '' && gameboard[2][i] === '') {
+    function checkRows() {
+        let winnerMessage;
+        gameboard.forEach((row) => {
+            if (row[0] === '' && row[1] === '' && row[2] === '') {
+                // Do nothing
+            } else if (row[0] !== row[1] || row[0] !== row[2] || row[1] !== row[2]) {
+                // Do nothing
+            } else {
+                if (row[0] === playerOne.mark) {
+                    playerOne.score += 1;
+                    winnerMessage = `${playerOne.name} wins this round!`;
+                } else if (row[0] === playerTwo.mark) {
+                    playerTwo.score += 1;
+                    winnerMessage = `${playerTwo.name} wins this round!`;
+                }
+                winnerMessage = continueOrEndGame(winnerMessage);
+            }
+        })
+        return winnerMessage;
+    }
+
+    function checkColumns() {
+        let winnerMessage;
+        for (let i = 0; i < 3; i++) {
+            if (gameboard[0][i] === '' && gameboard[1][i] === '' && gameboard[2][i] === '') {
+                // Do nothing
+            } else if (
+                gameboard[0][i] !== gameboard[1][i] ||
+                gameboard[0][i] !== gameboard[2][i] ||
+                gameboard[1][i] !== gameboard[2][i]
+            ) {
+                // Do nothing
+            } else {
+                if (gameboard[0][i] === playerOne.mark) {
+                    playerOne.score += 1;
+                    winnerMessage = `${playerOne.name} wins that round!`;
+                } else if (gameboard[0][i] === playerTwo.mark) {
+                    playerTwo.score += 1;
+                    winnerMessage = `${playerTwo.name} wins that round!`;
+                }
+                winnerMessage = continueOrEndGame(winnerMessage);
+            }
+        }
+        return winnerMessage;
+    }
+
+    function checkDiagonals() {
+        let winnerMessage;
+
+        // Check the forward slash diagonal for a win
+        if (gameboard[0][0] === '' || gameboard[1][1] === '' || gameboard[2][2] === '') {
             // Do nothing
-        } else if (
-            gameboard[0][i] !== gameboard[1][i] ||
-            gameboard[0][i] !== gameboard[2][i] ||
-            gameboard[1][i] !== gameboard[2][i]
+        } else if (gameboard[0][0] !== gameboard[1][1] ||
+            gameboard[0][0] !== gameboard[1][1] ||
+            gameboard[1][1] !== gameboard[2][2]
         ) {
             // Do nothing
-        } else {
-            if (gameboard[0][i] === playerOne.mark) {
+        } else if (gameboard[0][0] === gameboard[1][1] &&
+            gameboard[0][0] === gameboard[1][1] &&
+            gameboard[1][1] === gameboard[2][2]
+        ) {
+            if (gameboard[1][1] === playerOne.mark) {
                 playerOne.score += 1;
                 winnerMessage = `${playerOne.name} wins that round!`;
-            } else if (gameboard[0][i] === playerTwo.mark) {
+            } else if (gameboard[1][1] === playerTwo.mark) {
                 playerTwo.score += 1;
                 winnerMessage = `${playerTwo.name} wins that round!`;
             }
             winnerMessage = continueOrEndGame(winnerMessage);
         }
-    }
-    return winnerMessage;
-}
 
-function checkDiagonals() {
-    let winnerMessage;
-
-    // Check the forward slash diagonal for a win
-    if (gameboard[0][0] === '' || gameboard[1][1] === '' || gameboard[2][2] === '') {
-        // Do nothing
-    } else if (gameboard[0][0] !== gameboard[1][1] ||
-        gameboard[0][0] !== gameboard[1][1] ||
-        gameboard[1][1] !== gameboard[2][2]
-    ) {
-        // Do nothing
-    } else if (gameboard[0][0] === gameboard[1][1] &&
-        gameboard[0][0] === gameboard[1][1] &&
-        gameboard[1][1] === gameboard[2][2]
-    ) {
-        if (gameboard[1][1] === playerOne.mark) {
-            playerOne.score += 1;
-            winnerMessage = `${playerOne.name} wins that round!`;
-        } else if (gameboard[1][1] === playerTwo.mark) {
-            playerTwo.score += 1;
-            winnerMessage = `${playerTwo.name} wins that round!`;
+        // Check the backward slash diagonal for a win
+        if (gameboard[2][0] === '' || gameboard[1][1] === '' || gameboard[0][2] === '') {
+            // Do nothing
+        } else if (gameboard[2][0] !== gameboard[1][1] ||
+            gameboard[2][0] !== gameboard[1][1] ||
+            gameboard[1][1] !== gameboard[0][2]
+        ) {
+            // Do nothing
+        } else if (gameboard[2][0] === gameboard[1][1] &&
+            gameboard[2][0] === gameboard[1][1] &&
+            gameboard[1][1] === gameboard[0][2]
+        ) {
+            if (gameboard[1][1] === playerOne.mark) {
+                playerOne.score += 1;
+                winnerMessage = `${playerOne.name} wins that round!`;
+            } else if (gameboard[1][1] === playerTwo.mark) {
+                playerTwo.score += 1;
+                winnerMessage = `${playerTwo.name} wins that round!`;
+            }
+            winnerMessage = continueOrEndGame(winnerMessage);
         }
-        winnerMessage = continueOrEndGame(winnerMessage);
+
+        return winnerMessage;
     }
 
-    // Check the backward slash diagonal for a win
-    if (gameboard[2][0] === '' || gameboard[1][1] === '' || gameboard[0][2] === '') {
-        // Do nothing
-    } else if (gameboard[2][0] !== gameboard[1][1] ||
-        gameboard[2][0] !== gameboard[1][1] ||
-        gameboard[1][1] !== gameboard[0][2]
-    ) {
-        // Do nothing
-    } else if (gameboard[2][0] === gameboard[1][1] &&
-        gameboard[2][0] === gameboard[1][1] &&
-        gameboard[1][1] === gameboard[0][2]
-    ) {
-        if (gameboard[1][1] === playerOne.mark) {
-            playerOne.score += 1;
-            winnerMessage = `${playerOne.name} wins that round!`;
-        } else if (gameboard[1][1] === playerTwo.mark) {
-            playerTwo.score += 1;
-            winnerMessage = `${playerTwo.name} wins that round!`;
+    function checkTie() {
+        let fullOrNotFull = checkAllSpacesFull();
+        if (fullOrNotFull === "Full") {
+            clearGameboard();
+            buildGameboard();
+            return "That round was a tie! Try again."
         }
-        winnerMessage = continueOrEndGame(winnerMessage);
     }
 
-    return winnerMessage;
-}
-
-function checkTie() {
-    let fullOrNotFull = checkAllSpacesFull();
-    if (fullOrNotFull === "Full") {
-        clearGameboard();
-        buildGameboard();
-        return "That round was a tie! Try again."
-    }
-}
-
-function checkAllSpacesFull() {
-    let fullOrNotFull;
-    for (let rowNum = 0; rowNum < gameboard.length; rowNum++) {
-        for (let colNum = 0; colNum < gameboard[rowNum].length; colNum++) {
-            if (gameboard[rowNum][colNum] === '') {
-                fullOrNotFull = "Not Full";
+    function checkAllSpacesFull() {
+        let fullOrNotFull;
+        for (let rowNum = 0; rowNum < gameboard.length; rowNum++) {
+            for (let colNum = 0; colNum < gameboard[rowNum].length; colNum++) {
+                if (gameboard[rowNum][colNum] === '') {
+                    fullOrNotFull = "Not Full";
+                }
+            }
+            if (fullOrNotFull === "Not Full") {
+                break;
             }
         }
         if (fullOrNotFull === "Not Full") {
-            break;
+            return "Not Full";
+        } else {
+            return "Full";
         }
     }
-    if (fullOrNotFull === "Not Full") {
-        return "Not Full";
-    } else {
-        return "Full";
+
+    function clearGameboard() {
+        const gameboardDiv = document.querySelector('.gameboard');
+        while (gameboardDiv.firstChild) {
+            gameboard[gameboardDiv.lastChild.id] = ['', '', ''];
+            gameboardDiv.removeChild(gameboardDiv.lastChild);
+        }
     }
-}
 
-function clearGameboard() {
-    const gameboardDiv = document.querySelector('.gameboard');
-    while (gameboardDiv.firstChild) {
-        gameboard[gameboardDiv.lastChild.id] = ['', '', ''];
-        gameboardDiv.removeChild(gameboardDiv.lastChild);
+    function continueOrEndGame(winnerMessage) {
+        if (playerOne.score === scoreToWin) {
+
+            gamestarterDiv.textContent = "Play Again?"
+
+            let restartButton = document.createElement("button");
+            restartButton.type = "button"
+            restartButton.textContent = "AGAIN!"
+            restartButton.setAttribute("id", "restartGame");
+            restartButton.addEventListener('click', playAgain);
+
+            instruction.textContent = '';
+            instruction.appendChild(restartButton);
+
+            return `${playerOne.name} won the entire game!`
+
+        } else if (playerTwo.score === scoreToWin) {
+
+            gamestarterDiv.textContent = "Play Again?"
+
+            let restartButton = document.createElement("button");
+            restartButton.type = "button"
+            restartButton.textContent = "AGAIN!"
+            restartButton.setAttribute("id", "restartGame");
+            restartButton.addEventListener('click', playAgain);
+
+            instruction.textContent = '';
+            instruction.appendChild(restartButton);
+
+            return `${playerTwo.name} won the entire game!`
+
+        } else {
+            clearGameboard();
+            buildGameboard();
+            return winnerMessage;
+        }
     }
-}
 
-function continueOrEndGame(winnerMessage) {
-    if (playerOne.score === game.scoreToWin) {
+    function playAgain() {
 
-        gamestarterDiv.textContent = "Play Again?"
+        gameboard.forEach((row) => {
+            row.forEach((column) => {
+                column = '';
+            })
+        })
 
-        let restartButton = document.createElement("button");
-        restartButton.type = "button"
-        restartButton.textContent = "AGAIN!"
-        restartButton.setAttribute("id", "restartGame");
-        restartButton.addEventListener('click', playAgain);
+        document.querySelector("#restartGame").remove();
+        gamestarterDiv.textContent = '';
+        message.textContent = '';
 
-        instruction.textContent = '';
-        instruction.appendChild(restartButton);
+        let currentPlayer = instruction.classList.value;
+        if (currentPlayer === playerOne.mark) {
+            instruction.textContent = `${playerTwo.name} goes first!`;
+        } else if (currentPlayer === playerTwo.mark) {
+            instruction.textContent = `${playerOne.name} goes first!`;
+        }
 
-        return `${playerOne.name} won the entire game!`
+        playerOne.score = 0;
+        playerTwo.score = 0;
 
-    } else if (playerTwo.score === game.scoreToWin) {
-
-        gamestarterDiv.textContent = "Play Again?"
-
-        let restartButton = document.createElement("button");
-        restartButton.type = "button"
-        restartButton.textContent = "AGAIN!"
-        restartButton.setAttribute("id", "restartGame");
-        restartButton.addEventListener('click', playAgain);
-
-        instruction.textContent = '';
-        instruction.appendChild(restartButton);
-
-        return `${playerTwo.name} won the entire game!`
-
-    } else {
         clearGameboard();
         buildGameboard();
-        return winnerMessage;
-    }
-}
-
-function playAgain() {
-
-    gameboard.forEach((row) => {
-        row.forEach((column) => {
-            column = '';
-        })
-    })
-
-    document.querySelector("#restartGame").remove();
-    gamestarterDiv.textContent = '';
-    message.textContent = '';
-
-    let currentPlayer = instruction.classList.value;
-    if (currentPlayer === playerOne.mark) {
-        instruction.textContent = `${playerTwo.name} goes first!`;
-    } else if (currentPlayer === playerTwo.mark) {
-        instruction.textContent = `${playerOne.name} goes first!`;
     }
 
-    playerOne.score = 0;
-    playerTwo.score = 0; 
-    
-    clearGameboard();
-    buildGameboard();
-}
+    buildPlayerInputs();
+    listenSubmitPlayers();
+})();
